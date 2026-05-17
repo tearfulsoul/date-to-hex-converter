@@ -1,125 +1,106 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Date Hex Tool</title>
+  <title>Date Hex Converter</title>
+
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f0f12;
-      color: #fff;
-      display: flex;
       height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #0b0c10;
+      font-family: system-ui, Arial, sans-serif;
+      color: #e6e6e6;
     }
 
-    /* Sidebar */
-    .sidebar {
-      width: 220px;
-      background: #1a1b1f;
-      padding: 20px;
-      box-sizing: border-box;
+    .panel {
+      width: 420px;
+      padding: 24px;
+      border-radius: 12px;
+      background: #14161b;
+      border: 1px solid #2a2d36;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
 
-    .sidebar h2 {
-      font-size: 14px;
-      color: #aaa;
-      margin-bottom: 10px;
+    h1 {
+      font-size: 16px;
+      margin: 0 0 16px 0;
+      font-weight: 600;
     }
 
-    .channel {
-      padding: 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      color: #ccc;
-    }
-
-    .channel:hover {
-      background: #2b2d31;
-      color: white;
-    }
-
-    /* Main */
-    .main {
-      flex: 1;
-      padding: 30px;
-      background: #111214;
-    }
-
-    .card {
-      background: #1e1f24;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 600px;
+    .row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
     input {
       width: 100%;
       padding: 10px;
-      margin-top: 10px;
-      border-radius: 6px;
-      border: none;
-      background: #2b2d31;
-      color: white;
+      border-radius: 8px;
+      border: 1px solid #2a2d36;
+      background: #0f1116;
+      color: #e6e6e6;
+      outline: none;
     }
 
     button {
-      margin-top: 10px;
-      padding: 10px;
       width: 100%;
+      padding: 10px;
       border: none;
-      border-radius: 6px;
-      background: #5865f2;
+      border-radius: 8px;
+      background: #3a6ff7;
       color: white;
+      font-weight: 500;
       cursor: pointer;
-      font-weight: bold;
+      transition: 0.15s;
     }
 
     button:hover {
-      background: #4752c4;
+      background: #2f5fe0;
     }
 
     .output {
-      margin-top: 20px;
-      background: #2b2d31;
-      padding: 15px;
-      border-radius: 6px;
-      white-space: pre-wrap;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #0f1116;
+      border: 1px solid #2a2d36;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      white-space: pre;
+      line-height: 1.6;
     }
 
-    .copy {
+    .subtle {
       margin-top: 10px;
-      background: #3a3d45;
+      font-size: 12px;
+      color: #8a8f98;
+      text-align: center;
     }
-
   </style>
 </head>
 
 <body>
 
-  <div class="sidebar">
-    <h2>TOOLS</h2>
-    <div class="channel"># date-converter</div>
-    <div class="channel"># hex-tools</div>
-    <div class="channel"># system</div>
+<div class="panel">
+  <h1>Date → Hex Converter</h1>
+
+  <div class="row">
+    <input type="date" id="date">
   </div>
 
-  <div class="main">
-    <div class="card">
-      <h2>Date → Hex Converter</h2>
+  <button onclick="convert()">Convert</button>
 
-      <input type="date" id="date">
+  <div class="output" id="out">Select a date to begin</div>
 
-      <button onclick="convert()">Convert</button>
-
-      <div class="output" id="out">Result will appear here...</div>
-
-      <button class="copy" onclick="copyText()">Copy Result</button>
-    </div>
-  </div>
+  <div class="subtle">Unix timestamp + FILETIME conversion</div>
+</div>
 
 <script>
-let lastOutput = "";
-
 function toUnixHex(date){
     const unix = Math.floor(date.getTime() / 1000);
     return "0x" + unix.toString(16).toUpperCase();
@@ -134,24 +115,14 @@ function convert(){
     const input = document.getElementById("date").value;
     const date = new Date(input);
 
-    if (isNaN(date)) {
-        lastOutput = "Invalid date.";
-        document.getElementById("out").innerText = lastOutput;
+    if (isNaN(date)){
+        document.getElementById("out").innerText = "Invalid date selected.";
         return;
     }
 
-    lastOutput =
-`InstallDate (Unix hex):
-${toUnixHex(date)}
-
-InstallTime (FILETIME hex):
-${toFileTimeHex(date)}`;
-
-    document.getElementById("out").innerText = lastOutput;
-}
-
-function copyText(){
-    navigator.clipboard.writeText(lastOutput);
+    document.getElementById("out").innerText =
+`InstallDate      : ${toUnixHex(date)}
+InstallTime      : ${toFileTimeHex(date)}`;
 }
 </script>
 
